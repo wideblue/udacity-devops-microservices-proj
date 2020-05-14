@@ -1,42 +1,54 @@
-<include a CircleCI status badge, here>
+[![wideblue](https://circleci.com/gh/wideblue/udacity-devops-microservices-proj.svg?style=svg)](https://app.circleci.com/pipelines/github/wideblue/udacity-devops-microservices-proj)
 
-## Project Overview
+#  Demonstration Machine Learning Microservice API
 
-In this project, you will apply the skills you have acquired in this course to operationalize a Machine Learning Microservice API. 
+This is a project for Udacity Cloud Devops nanodegree that demonstrates simple python microservice  that serves predictions of housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. The microservice is built with pre-trained, `sklearn` model (`model_data`) that has been trained with data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing). The project was set up to tests my ability to operationalize a Python flask app—in a provided file, `app.py`—that serves out predictions (inference) about housing prices through API calls. The tasks that needed to be done are listed in [Project instructions](./Project-instrutions.md). The project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
 
-You are given a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. You can read more about the data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing). This project tests your ability to operationalize a Python flask app—in a provided file, `app.py`—that serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
+## Running the microservice
 
-### Project Tasks
+### Local setup
 
-Your project goal is to operationalize this working, machine learning microservice using [kubernetes](https://kubernetes.io/), which is an open-source system for automating the management of containerized applications. In this project you will:
-* Test your project code using linting
-* Complete a Dockerfile to containerize this application
-* Deploy your containerized application using Docker and make a prediction
-* Improve the log statements in the source code for this application
-* Configure Kubernetes and create a Kubernetes cluster
-* Deploy a container using Kubernetes and make a prediction
-* Upload a complete Github repo with CircleCI to indicate that your code has been tested
+Python 3 needs to be installed on your system. The use of python virtualenv is suggested. To create and activate a new environment, named .devops with Python 3 run:
+```
+python3 -m venv ~/.devops
+source ~/.devops/bin/activate
+```
+Install dependencies: 
+```
+make install
+```
+Run the service on port 8000:
+```
+python app.py 8000
+```
 
-You can find a detailed [project rubric, here](https://review.udacity.com/#!/rubrics/2576/view).
+### Run in Docker 
 
-**The final implementation of the project will showcase your abilities to operationalize production microservices.**
+There is a convenience script that builds a Docker image from `Dockerfile` and creates a container that listens on port 8000:
+```
+./run_docker.sh
+```
+`upload_docker.sh` is a convenience script that tags and pushes Docker image to registry. In order to do that first set the `dockerpath` variable to `<Your Docker ID>/<Image-name>` in the script and than run it 
+```
+./upload_docker.sh
+```
 
----
+### Run on Kubernetes 
 
-## Setup the Environment
+The `kubectl` CLI needs to be installed and configured on the system. There is a convenience script `run_kubernetes.sh` that creates a kubernetes pod based on the Docker image. If you want to use your own image push it first to the registry with `upload_docker.sh` and also set the `dockerpath` variable to `<Your Docker ID>/<Image-name>` in both scripts.  The script also forwards pod port 80 to port 8000 on local machine:
+```
+./run_kubernetes.sh
+```
+If the script returns an error because the pod hasn't started yet, just wait for the pod to start and run `kubectl port-forward udacity-app 8000:80` again.
 
-* Create a virtualenv and activate it
-* Run `make install` to install the necessary dependencies
+### Make predictions
 
-### Running `app.py`
+To make predictions use:
+```
+./make_prediction.sh
+```
 
-1. Standalone:  `python app.py`
-2. Run in Docker:  `./run_docker.sh`
-3. Run in Kubernetes:  `./run_kubernetes.sh`
+### Development use of CI/CD
+In the root of this repository is configuration directory `.circleci` for Circle CI pipeline. 
 
-### Kubernetes Steps
 
-* Setup and Configure Docker locally
-* Setup and Configure Kubernetes locally
-* Create Flask app in Container
-* Run via kubectl
