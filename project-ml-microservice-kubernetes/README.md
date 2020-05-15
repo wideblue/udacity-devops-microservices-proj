@@ -28,7 +28,7 @@ There is a convenience script that builds a Docker image from `Dockerfile` and c
 ```
 ./run_docker.sh
 ```
-`upload_docker.sh` is a convenience script that tags and pushes Docker image to registry. In order to do that first set the `dockerpath` variable to `<Your Docker ID>/<Image-name>` in the script and than run it 
+`upload_docker.sh` is a convenience script that tags and pushes Docker image to registry. In order to do that first set the `dockerpath` variable to `<Your Docker ID>/<Image-name>` in the script and then run it 
 ```
 ./upload_docker.sh
 ```
@@ -43,10 +43,11 @@ If the script returns an error because the pod hasn't started yet, just wait for
 
 ### Make predictions
 
-To make predictions use:
+Script that sends default set of parameters to the microservice API endpoint is run:
 ```
 ./make_prediction.sh
 ```
+To get prediction for different kind of housing change parameters in the script and rerun the script.
 
 ### Development use of CI/CD
 In the root of this repository is configuration directory `.circleci` for Circle CI pipeline. 

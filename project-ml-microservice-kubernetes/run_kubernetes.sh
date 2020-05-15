@@ -18,7 +18,7 @@ kubectl get po -o wide
 # Forward the container port to a host
 # note this would usually fail because the 
 # udacity-app pod would not start yet
-# sleep 60
+sleep 60
 kubectl port-forward udacity-app 8000:80
 
 # Standard way to expose service on host node,
